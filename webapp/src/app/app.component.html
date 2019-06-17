@@ -1,1 +1,37 @@
-<mat-toolbar><span>PollOn VV - Vote Viewer</span></mat-toolbar>
+<mat-card>
+
+    <mat-card-content><img style="display: block;margin-left: auto;margin-right: auto;width: 25%;height: 25%;"
+            src="../assets/pollon_testata.png" alt="Italian Trulli" id="testataLoading"></mat-card-content>
+
+</mat-card>
+<mat-divider></mat-divider>
+<mat-card>
+
+    <mat-vertical-stepper>
+        <mat-step label="Inserisci L'indirizzo della Votazione (LYRA)">
+            <mat-form-field>
+                <input matInput [(ngModel)]="lyra" placeholder="Poll Address (LYRA)">
+            </mat-form-field>
+
+            <div>
+                <button mat-stroked-button matStepperNext>Next</button>
+            </div>
+        </mat-step>
+        <mat-step label="Inserisci la Password">
+            <mat-form-field>
+                <input matInput type="password" [(ngModel)]="password" placeholder="Password">
+            </mat-form-field>
+            <div>
+                <button mat-stroked-button matStepperPrevious>Back</button>
+                <button mat-stroked-button matStepperNext>Next</button>
+            </div>
+        </mat-step>
+        <mat-step label="Risultati">
+            <div>
+                <button mat-stroked-button matStepperPrevious>Back</button>
+                <button mat-stroked-button (click)="getResults($event)">Results</button>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
+
+</mat-card>
