@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>{{data.poll.name}}</h1>
+<div mat-dialog-content>
+    <h2 mat-dialog-title>Description:</h2>
+    <h3 class="mat-h3">{{data.poll.description}}</h3>
+    <h2 mat-dialog-title>Question:</h2>
+    <h3 class="mat-h3"> {{data.poll.question}}</h3>
+    <h2 mat-dialog-title>Answers</h2>
+    <span *ngFor="let answer of data.results; let i=index;">
+        <h3 class="mat-h3">{{answer.k}} ({{answer.d}} votes) </h3><h3 class="mat-h3"><progress value="{{answer.v}}" max="100"></progress> {{answer.v}}%</h3>
+    </span>
+
+</div>
+<div mat-dialog-actions >
+  <button mat-button (click)="onNoClick()" class="block">Close</button>
+</div>

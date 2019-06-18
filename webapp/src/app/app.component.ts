@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import axios from 'axios'
 import * as CryptoJS from 'crypto-js';
-
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_SNACK_BAR_DATA } from '@angular/material';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -9,23 +11,35 @@ import * as CryptoJS from 'crypto-js';
   providers: []
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent {
 
   lyra = "";
   password = "";
   results = {}
+  results_to_send = []
+  poll: any
+  total: number = 0
+  progress: boolean = false
+  durationInSeconds = 5;
 
-  constructor() {
+  constructor(public dialog: MatDialog, private _snackBar: MatSnackBar) {
   }
 
-  ngOnInit() {
 
+  openSnackBar(data: string) {
+    this._snackBar.openFromComponent(SnackComponent, {
+      data: data,
+      duration: this.durationInSeconds * 1000,
+    });
   }
 
-  getResults(event) {
+  async getResults(event) {
+    this.progress = true
     this.results = {}
+    this.results_to_send = []
+    this.total = 0
     if (this.lyra !== "" && this.password !== "") {
-      this.ReceivedVoteCardFromAPI(this.lyra).then(__received => {
+      await this.ReceivedVoteCardsFromAPI(this.lyra).then(__received => {
         var txs: any = __received
         for (var i = 0; i < txs.length; i++) {
           var tx = txs[i]
@@ -35,16 +49,14 @@ export class AppComponent implements OnInit {
               if (this.password !== '') {
                 try {
                   var lr = (this.decrypt(exp[2], this.password))
-
-                } catch{
-                  
-                }
-
+                } catch{ }
                 if (!isNaN(Number(lr))) {
                   if (this.results.hasOwnProperty(lr)) {
                     this.results[lr] = this.results[lr] + 1
+                    this.total = this.total + 1
                   } else {
                     this.results[lr] = 1
+                    this.total = this.total + 1
                   }
                 }
               }
@@ -53,26 +65,65 @@ export class AppComponent implements OnInit {
         }
         return this.results
 
-      }).then(x => {
-        console.log(x)
+      }).then(async x => {
+
+        await this.ReadPollFromAPI(this.lyra).then(res => {
+          Object.keys(res).forEach(k => {
+            if (res[k]['data'].hasOwnProperty('name')) {
+              this.poll = res[k]['data']
+            }
+          })
+        }).catch(ex => this.progress = false).then(r => {
+          Object.keys(this.results).forEach(el => {
+            var local = { 'k': [this.poll['answers'][el]['value']], 'v': [this.results[el] * 100 / this.total], 'd': this.results[el] }
+            this.results_to_send.push(local)
+          })
+        })
         if (x !== undefined && Object.keys(x).length > 0) {
-          alert(JSON.stringify(this.results))
+          this.openDialog()
         } else {
-          alert('Wrong Lyra Address or Password')
+          this.openSnackBar("Wrong Lyra Address or Password!")
         }
-
       })
-
     }
     else {
-      alert("Completa tutti i campi e verifica che l'indirizzo e la password siano corretti!")
+      this.openSnackBar("Completa tutti i campi e verifica che l'indirizzo e la password siano corretti!")
     }
+    this.progress = false
   }
 
-  ReceivedVoteCardFromAPI(address) {
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverview, {
+      minWidth: '400px',
+      data: { poll: this.poll, results: this.results_to_send }
+    });
+
+  }
+
+  ReceivedVoteCardsFromAPI(address) {
     return new Promise((resolve, reject) => {
       axios.post('https://idanode01.scryptachain.org/received', {
         address: address
+      })
+        .then((resp) => {
+          resolve(resp.data.data)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+
+  }
+
+  ReadPollFromAPI(address) {
+    return new Promise((resolve, reject) => {
+      axios.post('https://idanode01.scryptachain.org/read', {
+        address: address,
+        json: true,
+        history: false,
+        decrypt: false,
+        protocol: 'poll://'
+
       })
         .then((resp) => {
           resolve(resp.data.data)
@@ -104,8 +155,42 @@ export class AppComponent implements OnInit {
     })
     return decrypted.toString(CryptoJS.enc.Utf8);
   }
+}
 
+@Component({
+  selector: 'snack-bar',
+  template: `
+  <span class="snack">
+  {{data}}
+  </span> 
+  `,
+  styles: [`
+    .snack {
+      color: hotpink;
+    }
+  `],
+})
+export class SnackComponent {
+  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) {
+  }
+}
 
+export interface DialogData {
+  poll: any;
+  results: any;
+}
+@Component({
+  selector: 'dialog-overview',
+  templateUrl: './dialog.html',
+})
+export class DialogOverview {
 
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverview>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
 }

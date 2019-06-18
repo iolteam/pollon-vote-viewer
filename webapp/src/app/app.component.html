@@ -9,26 +9,28 @@
 
     <mat-vertical-stepper>
         <mat-step label="Inserisci L'indirizzo della Votazione (LYRA)">
-            <mat-form-field>
+            <mat-form-field style="width: 350px;">
                 <input matInput [(ngModel)]="lyra" placeholder="Poll Address (LYRA)">
             </mat-form-field>
 
             <div>
-                <button mat-stroked-button matStepperNext>Next</button>
+                
+                <button mat-stroked-button matStepperNext><i class="material-icons">arrow forward</i></button>
             </div>
         </mat-step>
         <mat-step label="Inserisci la Password">
-            <mat-form-field>
+            <mat-form-field style="width: 350px;">
                 <input matInput type="password" [(ngModel)]="password" placeholder="Password">
             </mat-form-field>
             <div>
-                <button mat-stroked-button matStepperPrevious>Back</button>
-                <button mat-stroked-button matStepperNext>Next</button>
+                    <button mat-stroked-button matStepperNext><i class="material-icons">arrow forward</i></button>
             </div>
         </mat-step>
         <mat-step label="Risultati">
             <div>
-                <button mat-stroked-button matStepperPrevious>Back</button>
+                <div *ngIf="progress"> 
+                    <mat-progress-bar mode="query"></mat-progress-bar><br>
+                </div>
                 <button mat-stroked-button (click)="getResults($event)">Results</button>
             </div>
         </mat-step>
