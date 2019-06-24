@@ -1,7 +1,8 @@
-<mat-card>
+<mat-card class="testata">
 
-    <mat-card-content><img style="display: block;margin-left: auto;margin-right: auto;width: 25%;height: 25%;"
-            src="../assets/pollon_testata.png" alt="Italian Trulli" id="testataLoading"></mat-card-content>
+    <mat-card-content>
+        <img src="../assets/PVV-logo-2.png" alt="Italian Trulli" id="testataLoading" class="logo">
+    </mat-card-content>
 
 </mat-card>
 <mat-divider></mat-divider>
@@ -14,8 +15,11 @@
             </mat-form-field>
 
             <div>
-                
-                <button mat-stroked-button matStepperNext><i class="material-icons">arrow forward</i></button>
+
+                <!--button mat-stroked-button matStepperNext><i class="material-icons">arrow forward</i></button-->
+                <button mat-icon-button matStepperNext label="Next">
+                    <i class="material-icons bigIcon">arrow_forward</i>
+                </button>
             </div>
         </mat-step>
         <mat-step label="Inserisci la Password">
@@ -23,15 +27,40 @@
                 <input matInput type="password" [(ngModel)]="password" placeholder="Password">
             </mat-form-field>
             <div>
-                    <button mat-stroked-button matStepperNext><i class="material-icons">arrow forward</i></button>
+                <button mat-icon-button matStepperNext aria-label="Next">
+                    <i class="material-icons bigIcon">arrow_forward</i>
+                </button>
             </div>
         </mat-step>
         <mat-step label="Risultati">
             <div>
-                <div *ngIf="progress"> 
+                <div *ngIf="progress">
                     <mat-progress-bar mode="query"></mat-progress-bar><br>
                 </div>
-                <button mat-stroked-button (click)="getResults($event)">Results</button>
+                <!--button mat-stroked-button class="buttonMe" (click)="getResults($event)">Risultati</button-->
+                <button mat-icon-button matStepperNext aria-label="Next" (click)="getResults($event)">
+                    <i class="material-icons bigIcon">bar_chart</i>
+                </button>
+            </div>
+            <div class="results" *ngIf="showResults">
+                <div style="float:right">
+                    <button mat-icon-button matStepperNext aria-label="Chiudi" (click)="onNoClick()">
+                        <i class="material-icons bigIcon">clear</i>
+                    </button>
+                </div>
+                <h1 mat-dialog-title>{{poll.name}}</h1>
+                <div mat-dialog-content>
+                    <h2 mat-dialog-title>Descrizione:</h2>
+                    <h3 class="mat-h3">{{poll.description}}</h3>
+                    <h2 mat-dialog-title>Quesito:</h2>
+                    <h3 class="mat-h3"> {{poll.question}}</h3>
+                    <h2 mat-dialog-title>Risposte</h2>
+                    <span *ngFor="let answer of results_to_send; let i=index;">
+                        <h3 class="mat-h3">{{answer.k}} ({{answer.d}} votes) </h3>
+                        <h3 class="mat-h3"><progress value="{{answer.v}}" max="100"></progress> {{answer.v}}%</h3>
+                    </span>
+
+                </div>
             </div>
         </mat-step>
     </mat-vertical-stepper>
