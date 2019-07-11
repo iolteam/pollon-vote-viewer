@@ -74,10 +74,16 @@ export class AppComponent {
             }
           })
         }).catch(ex => this.progress = false).then(r => {
-          Object.keys(this.results).forEach(el => {
-            var local = { 'k': [this.poll['answers'][el]['value']], 'v': [this.results[el] * 100 / this.total], 'd': this.results[el] }
-            this.results_to_send.push(local)
-          })
+          try{
+            Object.keys(this.results).forEach(el => {
+              var local = { 'k': [this.poll['answers'][el]['value']], 'v': [this.results[el] * 100 / this.total], 'd': this.results[el] }
+              this.results_to_send.push(local)
+            })
+          }catch{
+            this.openSnackBar("Wrong Lyra Address or Password!")
+            this._snackBar.dismiss()
+          }
+          
         })
         if (x !== undefined && Object.keys(x).length > 0) {
           this.openDialog()
