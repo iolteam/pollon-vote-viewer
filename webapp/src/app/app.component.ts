@@ -21,6 +21,7 @@ export class AppComponent {
   total: number = 0
   progress: boolean = false
   durationInSeconds = 5;
+  showResults = false;
 
   constructor(public dialog: MatDialog, private _snackBar: MatSnackBar) {
   }
@@ -86,7 +87,8 @@ export class AppComponent {
           
         })
         if (x !== undefined && Object.keys(x).length > 0) {
-          this.openDialog()
+          //this.openDialog()
+          this.showResults=true;
         } else {
           this.openSnackBar("Wrong Lyra Address or Password!")
         }
@@ -104,6 +106,10 @@ export class AppComponent {
       data: { poll: this.poll, results: this.results_to_send }
     });
 
+  }
+
+  onNoClick() {
+    this.showResults=false;
   }
 
   ReceivedVoteCardsFromAPI(address) {
@@ -163,6 +169,8 @@ export class AppComponent {
   }
 }
 
+
+
 @Component({
   selector: 'snack-bar',
   template: `
@@ -172,7 +180,7 @@ export class AppComponent {
   `,
   styles: [`
     .snack {
-      color: hotpink;
+      color: black;
     }
   `],
 })
@@ -195,8 +203,6 @@ export class DialogOverview {
     public dialogRef: MatDialogRef<DialogOverview>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
+
 
 }

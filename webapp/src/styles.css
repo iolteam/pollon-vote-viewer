@@ -1,13 +1,98 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+.mat-stepper-horizontal {
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 1.2em;
+}
+
+.mat-stepper-vertical {
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;    
+}
 .block {
     display: block;
     width: 100%;
+    max-width: 200px;
     border: none;
     background-color: white;
     padding: 14px 28px;
     font-size: 16px;
     cursor: pointer;
     text-align: center;
+    color: #d82439;
   }
+
+  .mat-step-header .mat-step-icon-selected {
+    background-color:#2e3c98;
+}
+
+.mat-step-header .mat-step-icon-state-done {
+    background-color:#2e3c98;
+}
+
+.mat-step-label-selected, .mat-step-header .mat-step-label.mat-step-label-active {
+    font-size: 1.2em;
+}
+
+.mat-step-header .mat-step-icon-state-edit {
+    background-color:#2e3c98;
+}
+
+.bigIcon {
+    color: #d82439;
+    font-size: 3em;
+}
+
+.buttonMe {
+    color: #d82439;    
+    font-size: 1.2em;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    height: 30%;
+    min-width: 300px;
+    min-height: 70px;
+}
+
+.mat-card.testata {
+    padding: 0;
+}
+
+.mat-snack-bar-container {
+    background-color:#feefc3;
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;    
+}
+
+.mat-progress-bar-background {
+    fill:#add8e6
+}
+
+.mat-progress-bar-buffer {
+    background-color:#add8e6
+}
+
+.mat-progress-bar-fill::after {
+    background-color:#2e3c98
+}
+
+
+.mat-input-element {
+    caret-color: #2e3c98;
+}
+
+
+.mat-form-field.mat-focused .mat-form-field-label{color:#2e3c98}
+.mat-form-field-type-mat-native-select.mat-focused:not(.mat-form-field-invalid) .mat-form-field-infix::after{color:#2e3c98}
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{color:#2e3c98}
+.mat-form-field-infix::after{color:#2e3c98}
+
+.results {
+    border: 1px solid #c8c8c8;
+    border-radius: 10px;
+    padding: 20px;
+}
+
